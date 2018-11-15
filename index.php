@@ -67,7 +67,7 @@ if (isset($_POST['filtername'])&& $_POST['filtername']!= NULL){
 else{
 	while (!feof($file)){
 		$friend=fgets($file);
-		if ($friend) echo "<ul><li>$friend  n</li></ul>";
+		if ($friend) echo "<ul><li>$friend  </li></ul>";
 		$i++;
 	}
 }

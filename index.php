@@ -50,8 +50,7 @@ if (isset($_POST['filtername'])&& $_POST['filtername']!= NULL){
 			$friend=fgets($file);
 			$pos=strpos ($friend,$filter);
 			if ($pos === 0){
-				//else{
-					echo "<ul><li>$friend <button type='submit' name='delete' value='$i'>Delete</button</li></ul>";
+					echo "<ul><li>$friend </li></ul>";
 					$i++;	
 				}
 		}	
@@ -59,7 +58,7 @@ if (isset($_POST['filtername'])&& $_POST['filtername']!= NULL){
 	else{
 		while (!feof($file)){
 			$friend=fgets($file);
-			if (strstr ($friend,$filter))  echo "<ul><li>$friend  <button type='submit' name='delete' value='$i'>Delete</button</li></ul>";
+			if (strstr ($friend,$filter))  echo "<ul><li>$friend  </li></ul>";
 			$i++;
 		}
 	}
@@ -68,23 +67,13 @@ if (isset($_POST['filtername'])&& $_POST['filtername']!= NULL){
 else{
 	while (!feof($file)){
 		$friend=fgets($file);
-		if ($friend) echo "<ul><li>$friend  <button type='submit' name='delete' value='$i'>Delete</button</li></ul>";
+		if ($friend) echo "<ul><li>$friend  n</li></ul>";
 		$i++;
 	}
 }
 
 fclose($file);
 
-$file=fopen("friendlist.txt","a");
-
-
-if (isset($_POST['delete']) ) {
-    $i = $_POST['delete'];
-    unset($friendsArray[$i]);
-    $friendsArray = array_values($friendsArray);
-}
-
-fclose($file);
 ?>
 <br><br>
 <form action="index.php" method="post">

@@ -1,67 +1,95 @@
 <html>
 <head>
-<title>Hello World</title>
+<title>Friend's book</title>
+<style>
+header {
+ background-color: #666;
+ padding: 30px;
+ text-align: center;
+ font-size: 35px;
+ color: white;
+}
+footer {
+ background-color: #777;
+ padding: 10px;
+ text-align: center;
+ color: white;
+}
+</style>
 </head>
-<body style="text align: center; font-size: 50px;">
-<?php
-if(!isset($_GET['op']) || !isset($_GET['x']) || !isset($_GET['y'])){
-	echo "<h1>Error! Incomplete data</h1>";
-	exit();
-}
-$x=$_GET['x'];
-$y=$_GET['y'];
-/*
-function sum($x, $y) {
-	return $x + $y;
-}	
-function substract($x, $y) {
-	return $x - $y;
-}
-
-function  multiply ($x, $y) {
-	return $x * $y;
-}
-
-function divide ($x, $y) {
-	if($y==0){
-	echo "error, dividor can't be 0";
-	}
-	else {
-		return $x / $y;
-	}
-}*/
-switch ($_GET['op']) {
-	case 'sum':
-		$result=$x+$y;
-		echo "<h1>$x + $y = $result</h1>";
-	break;
-
-	case 'subtract':
-		$result=$x-$y;
-		echo "<h1>$x - $y = $result </h1>";
-	break;
-
-	case 'divide':
-		if($y==0){
-			echo "error, dividor can't be 0";
-		}
-		else {
-			$result=$x/$y;
-			echo "<h1>$x / $y = $result</h1>";
-		}
-	break;
-
-	case 'multiply':
-		$result=$x*$y;
-		echo "<h1>$x x $y = $result </h1>";
-		break;
-
-	default:
-		$op=$_GET['op'];
-		echo "<h1>Unrecognized operation: $op</h1>";
-}
-
-
-?>
-</body>
 </html>
+<body>
+<header>
+	<h2>
+		Friend Book
+	</h2>
+
+</header>
+<br>
+<form action="index.php" method="post">
+Name: <input type="text" name="name" />
+<input type="submit" />
+</form>
+<?php
+//writing
+if (isset($_POST['name'])&& $_POST['name']!=NULL) {
+ $name = $_POST['name'];
+ $file=fopen("friendlist.txt","a");
+ fwrite ($file,$name);
+ fwrite ($file,"\n");
+ fclose($file);
+}
+//reading
+$file=fopen("friendlist.txt","r");
+$i=0;
+//with filter
+if (isset($_POST['filtername'])&& $_POST['filtername']!= NULL){
+	$filter=$_POST['filtername'];
+	if (isset($_POST['startingWith'])){
+		while (!feof($file)){
+			$friend=fgets($file);
+			$pos=strpos ($friend,$filter);
+			if ($pos === 0){
+				//else{
+					echo "<ul><li>$friend <button type='submit' name='delete' value='$i'>Delete</button</li></ul>";
+					$i++;	
+				}
+		}	
+	}
+	else{
+		while (!feof($file)){
+			$friend=fgets($file);
+			if (strstr ($friend,$filter))  echo "<ul><li>$friend  <button type='submit' name='delete' value='$i'>Delete</button</li></ul>";
+			$i++;
+		}
+	}
+}
+//no filter
+else{
+	while (!feof($file)){
+		$friend=fgets($file);
+		if ($friend) echo "<ul><li>$friend  <button type='submit' name='delete' value='$i'>Delete</button</li></ul>";
+		$i++;
+	}
+}
+
+fclose($file);
+
+$file=fopen("friendlist.txt","a");
+
+
+if (isset($_POST['delete']) ) {
+    $i = $_POST['delete'];
+    unset($friendsArray[$i]);
+    $friendsArray = array_values($friendsArray);
+}
+
+fclose($file);
+?>
+<br><br>
+<form action="index.php" method="post">
+<input type="text" name="filtername" />
+<input type="submit" value="Filter list"/>
+<input type="checkbox" name="startingWith" <?php if ($startingWith=='TRUE') echo "checked"?> value="TRUE">Only names starting with</input>
+</form>
+</body>
